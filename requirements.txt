@@ -1,0 +1,13 @@
+langchain
+huggingface_hub
+transformers==4.30
+unstructured
+"unstructured[pdf]"
+sentence-transformers
+faiss-gpu #faiss
+torch
+accelerate
+huggingface-cli
+bitsandbytes
+accelerate
+xformers
