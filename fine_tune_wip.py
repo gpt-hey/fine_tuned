@@ -1,4 +1,5 @@
 import os
+import torchvision
 from langchain.vectorstores import FAISS
 from langchain.document_loaders import PyPDFLoader
 from langchain.chains.question_answering import load_qa_chain
@@ -18,8 +19,20 @@ import textwrap
 import sys
 import torch
 
+BASE_LLM_MODEL = "meta-llama/Llama-2-7b-chat-hf"
+
+class TextColor:
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    RESET = '\033[0m'
+
+print(TextColor.BLUE + "loaded all libs!" + TextColor.RESET)
+
 # set up hugging face api token
 os.environ['HuggingFaceHub_API_Token']= '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'
+print(TextColor.BLUE + "set up huggingFace API token!" + TextColor.RESET)
 
 # load and prepare sample training data
 loader = UnstructuredFileLoader('./sample.pdf')
@@ -30,18 +43,23 @@ text_splitter=CharacterTextSplitter(separator='\n',
 text_chunks=text_splitter.split_documents(documents)
 
 
-embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2',model_kwargs={'device': 'cuda'}) # TODO use cpu?
+# Note: for GPU support use model_kwargs={'device': 'cuda'}
+embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2',model_kwargs={'device': 'cpu'})
 vectorstore=FAISS.from_documents(text_chunks, embeddings)
 
+print(TextColor.BLUE + "load and prepare sample training data!" + TextColor.RESET)
+
 # load token from pre-trained model
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-chat-hf")
-model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-chat-hf",
+tokenizer = AutoTokenizer.from_pretrained(BASE_LLM_MODEL)
+model = AutoModelForCausalLM.from_pretrained(BASE_LLM_MODEL,
                                              device_map='auto',
-                                             torch_dtype=torch.float16,
+                                             torch_dtype=torch.float,
                                              use_auth_token=True,
-                                             load_in_8bit=True,
-                                              #load_in_4bit=True
-                                             )
+                                            #  load_in_8bit=True,
+                                             load_in_4bit=True
+                                            )
+
+print(TextColor.BLUE + "loaded token from pre-trained model!" + TextColor.RESET)
 
 # train on new data
 pipe = pipeline("text-generation",
@@ -57,6 +75,7 @@ pipe = pipeline("text-generation",
                 )
 llm=HuggingFacePipeline(pipeline=pipe, model_kwargs={'temperature':0})
 chain =  RetrievalQA.from_chain_type(llm=llm, chain_type = "stuff",return_source_documents=True, retriever=vectorstore.as_retriever())
+print(TextColor.BLUE + "trained on new data!" + TextColor.RESET)
 
 # query on new trained model
 query = "how old is jude and what does he do for living?"
