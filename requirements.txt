@@ -1,0 +1,5 @@
+numpy
+langchain
+sentence_transformers
+faiss-cpu
+ctransformers
