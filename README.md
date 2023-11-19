@@ -1,8 +1,23 @@
 ## setup
 ```
 // Mac (only), need to update transformer to use 4.30.0
+// Note: setup for MAC
+// 1. create env
+$python3 -m venv venv
 
-// oracle linux (only), need to update transformer to use 4.18.0
+// 2. activate venv
+$ source venv/bin/activate
+
+// 3. install package (one-time)
+$ pip install -r requirements.txt
+
+// 4. deactivate
+$ deactivate
+```
+
+
+```
+// WIP oracle linux (only), need to update transformer to use 4.18.0
 $ pip install --upgrade pip
 $ pip install torch==1.10.0 torchvision==0.11.1 torchaudio==0.10.0 -f https://download.pytorch.org/whl/cpu/torch_stable.html
 // install swig manually since yum install a very old version
@@ -24,19 +39,8 @@ $ sudo yum install mesa-libGL
 $ pip install accelerate
 $ pip install -i https://test.pypi.org/simple/ bitsandbytes
 
-//
 $ pip uninstall torchvision
 $ pip install --upgrade git+https://github.com/pytorch/vision.git
 $ conda install pillow numpy
-
-$python3 -m venv env
-// install package
-$ pip install -r requirements.txt
-
-// activate
-$ source venv/bin/activate
-
-// deactivate
-$ deactivate
 ```
 
