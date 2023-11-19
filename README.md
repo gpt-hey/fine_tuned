@@ -32,6 +32,9 @@ $ swig -version
 // install pytorch
 $ conda install -c pytorch faiss-cpu=1.7.4 mkl=2021 blas=1.0=mkl
 $ conda install --file requirements.txt
+// enable venv for conda
+$ source activate myenv
+
 // install other libs that are not on conda channel
 $ pip install accelerate bitsandbytes langchain sentence-transformers unstructured xformers "unstructured[pdf]"
 // install openGL
