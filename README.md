@@ -5,6 +5,19 @@
 // oracle linux (only), need to update transformer to use 4.18.0
 $ pip install --upgrade pip
 $ pip install torch==1.10.0 torchvision==0.11.1 torchaudio==0.10.0 -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
+$ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
+$ bash Miniconda3-latest-Linux-aarch64.sh
+$ source ~/.bashrc
+$ conda create -n myenv python=3.8
+$ source activate myenv
+$ conda install faiss-cpu -c pytorch
+$ conda install --file requirements.txt
+// ctransformers and sentence_transformers are not on default channel of conda so install manually:
+$ pip install ctransformers sentence_transformers
+$ pip install --upgrade pydantic
+
+
 // install swig manually since yum install a very old version
 $ scp ~/Downloads/swig-4.1.1.tar.gz opc@129.213.151.7:/home/opc
 swig-4.1.1.tar.gz
