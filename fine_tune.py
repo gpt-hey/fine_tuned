@@ -6,8 +6,6 @@ from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import CTransformers
-import sys
-import datetime
 
 class TextColor:
     RED = '\033[31m'
@@ -19,12 +17,14 @@ class TextColor:
 print(TextColor.BLUE + "loaded all libs!" + TextColor.RESET)
 
 
-
-# 1. log into huggingface
+# one-time pre-requisite: logging into huggingface
+# run the following code adhoc:
+# ```
 # from huggingface_hub import notebook_login
 # notebook_login()
-# print(TextColor.BLUE + "set up huggingFace API token!" + TextColor.RESET)
+# ```
 
+# 1. load the notes text data
 loader = TextLoader("./sample.txt")
 documents=loader.load()
 
@@ -34,15 +34,14 @@ text_splitter=RecursiveCharacterTextSplitter(
 text_chunks=text_splitter.split_documents(documents)
 print(TextColor.BLUE + "load and prepare sample training data!" + TextColor.RESET)
 
-
+# 2. convert the text chunks into Embeddings and create a FAISS vector store 
 embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2', model_kwargs={'device':'cpu'})
 
-#Step 4: Convert the Text Chunks into Embeddings and Create a FAISS Vector Store
 vector_store=FAISS.from_documents(text_chunks, embeddings)
-
 
 vector_store.as_retriever(search_kwargs={'k': 2})
 
+# 3. load pre-trained model
 llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
                   config={'max_new_tokens':500,
@@ -50,7 +49,7 @@ llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
 print(TextColor.BLUE + "loaded token from pre-trained model!" + TextColor.RESET)
 
 
-
+# 4. query using template
 template="""Use the following pieces of information to answer the user's question.
 If you dont know the answer just say you know, don't try to make up an answer.
 
@@ -62,8 +61,6 @@ Helpful answer
 """
 
 qa_prompt=PromptTemplate(template=template, input_variables=['context', 'question'])
-print(TextColor.BLUE + "prompt on template!" + TextColor.RESET)
-
 
 chain = RetrievalQA.from_chain_type(llm=llm,
                                    chain_type='stuff',
