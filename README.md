@@ -45,5 +45,15 @@ $ pip install -i https://test.pypi.org/simple/ bitsandbytes
 $ pip uninstall torchvision
 $ pip install --upgrade git+https://github.com/pytorch/vision.git
 $ conda install pillow numpy
+
+$ pip install langchain
+$ pip install sentence-transformers
+$ pip install faiss-cpu
+$ pip install ctransformers
 ```
 
+## llama_cpp
+```
+$ pip install langchain
+$ python llama_cpp.py
+```

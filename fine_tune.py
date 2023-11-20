@@ -6,6 +6,7 @@ from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import CTransformers
+from langchain.llms import LlamaCpp
 
 class TextColor:
     RED = '\033[31m'
@@ -39,14 +40,11 @@ embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6
 
 vector_store=FAISS.from_documents(text_chunks, embeddings)
 
-vector_store.as_retriever(search_kwargs={'k': 2})
-
 # 3. load pre-trained model
 llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
                   config={'max_new_tokens':500,
                           'temperature':0.1})
-print(TextColor.BLUE + "loaded token from pre-trained model!" + TextColor.RESET)
 
 
 # 4. query using template
@@ -61,13 +59,19 @@ Helpful answer
 """
 
 qa_prompt=PromptTemplate(template=template, input_variables=['context', 'question'])
-
-chain = RetrievalQA.from_chain_type(llm=llm,
+# chain1
+chain1 = RetrievalQA.from_chain_type(llm=llm,
                                    chain_type='stuff',
                                    retriever=vector_store.as_retriever(search_kwargs={'k': 2}),
                                    return_source_documents=True,
                                    chain_type_kwargs={'prompt': qa_prompt})
 
+# chain2
+# llm_chain = LLMChain(llm=llm, prompt=qa_prompt)
+# chain2 = RetrievalQA.from_llm(llm=llm_chain, retriever=vector_store.as_retriever(search_kwargs={'k': 2}))
+
 question="how old is jude and what does he do"
-result=chain({'query':question})
-print(result['result'])
+result1=chain1({'query':question})
+# result2=chain2({'query':question})
+print('result1: ', result1['result'])
+# print('result2: ', result2['result'])
