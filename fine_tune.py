@@ -43,6 +43,7 @@ vector_store=FAISS.from_documents(text_chunks, embeddings)
 # 3. load pre-trained model
 llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
+                  lib="./libctransformers.so",
                   config={'max_new_tokens':500,
                           'temperature':0.1})
 
