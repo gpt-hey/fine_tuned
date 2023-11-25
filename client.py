@@ -5,7 +5,7 @@ async def send_message():
     uri = "ws://localhost:8080"  # Replace with the actual WebSocket server URI
 
     async with websockets.connect(uri) as websocket:
-        message = "Hello, Server!"
+        message = "who is Jude!"
         print(f"Sending message to server: {message}")
         await websocket.send(message)
 
