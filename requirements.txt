@@ -2,3 +2,4 @@ numpy
 langchain
 faiss-cpu
 websockets
+supervisor

@@ -1,3 +1,9 @@
+## server setup
+```
+$ pip install -r requirements.txt
+$ supervisord -c supervisord.conf
+```
+
 ## setup
 ```
 // Mac (only), need to update transformer to use 4.30.0
@@ -51,6 +57,6 @@ $ pip install ctransformers
 
 ## llama_cpp
 ```
-$ pip install langchain
+$ pip install -r requirements.txt
 $ python llama_cpp.py
 ```

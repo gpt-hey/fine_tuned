@@ -52,9 +52,9 @@ async def message(websocket, path):
 
 async def main():
     # Start the WebSocket server on localhost, port 8080
-    server = await websockets.serve(message, "localhost", 8080)
+    server = await websockets.serve(message, "localhost", 8081)
 
-    print("WebSocket server started on ws://localhost:8080")
+    print("WebSocket server started on ws://localhost:8081")
 
     # Keep the server running until it's manually stopped
     await server.wait_closed()
