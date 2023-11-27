@@ -22,10 +22,15 @@ $ deactivate
 ```
 
 
+# setup for linux (aarch64)
 ```
-// WIP oracle linux (only), need to update transformer to use 4.18.0
+// oracle linux (aarch64), need to update transformer to use 4.18.0
+$ conda create --name myenv python=3.8
+$ source activate myenv
+
 $ pip install --upgrade pip
 $ pip install torch==1.10.0 torchvision==0.11.1 torchaudio==0.10.0 -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
 // install swig manually since yum install a very old version
 $ scp ~/Downloads/swig-4.1.1.tar.gz opc@129.213.151.7:/home/opc
 swig-4.1.1.tar.gz

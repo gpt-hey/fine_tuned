@@ -2,11 +2,12 @@ from langchain import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader
+# from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import CTransformers
 from langchain.llms import LlamaCpp
+import platform
 
 class TextColor:
     RED = '\033[31m'
@@ -41,9 +42,15 @@ embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6
 vector_store=FAISS.from_documents(text_chunks, embeddings)
 
 # 3. load pre-trained model
-llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
+if platform.architecture()[0] == '64bit' and platform.machine() == 'aarch64':
+    llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
                   lib="./libctransformers.so",
+                  config={'max_new_tokens':500,
+                          'temperature':0.1})
+else:
+    llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
+                  model_type="llama",
                   config={'max_new_tokens':500,
                           'temperature':0.1})
 
