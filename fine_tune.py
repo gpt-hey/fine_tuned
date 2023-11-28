@@ -2,11 +2,9 @@ from langchain import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-# from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import CTransformers
-from langchain.llms import LlamaCpp
 import platform
 
 class TextColor:
@@ -46,13 +44,11 @@ if platform.architecture()[0] == '64bit' and platform.machine() == 'aarch64':
     llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
                   lib="./libctransformers.so",
-                  config={'max_new_tokens':500,
-                          'temperature':0.1})
+                  config={'temperature':0.1})
 else:
     llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
-                  config={'max_new_tokens':500,
-                          'temperature':0.1})
+                  config={'temperature':0.1})
 
 
 # 4. query using template
@@ -68,18 +64,15 @@ Helpful answer
 
 qa_prompt=PromptTemplate(template=template, input_variables=['context', 'question'])
 # chain1
-chain1 = RetrievalQA.from_chain_type(llm=llm,
+chain = RetrievalQA.from_chain_type(llm=llm,
                                    chain_type='stuff',
                                    retriever=vector_store.as_retriever(search_kwargs={'k': 2}),
                                    return_source_documents=True,
                                    chain_type_kwargs={'prompt': qa_prompt})
 
-# chain2
-# llm_chain = LLMChain(llm=llm, prompt=qa_prompt)
-# chain2 = RetrievalQA.from_llm(llm=llm_chain, retriever=vector_store.as_retriever(search_kwargs={'k': 2}))
 
 question="how old is jude and what does he do"
-result1=chain1({'query':question})
-# result2=chain2({'query':question})
-print('result1: ', result1['result'])
-# print('result2: ', result2['result'])
+result=chain({'query':question})
+
+print('result: ', result['result'])
+

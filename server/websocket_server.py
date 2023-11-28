@@ -18,8 +18,6 @@ callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 llm = LlamaCpp(
     model_path="../llama-2-7b.gguf.q4_K_M.bin",
     temperature=0.75,
-    max_tokens=500,
-    top_p=1,
     callback_manager=callback_manager,
     verbose=True,  # Verbose is required to pass to the callback manager
 )
