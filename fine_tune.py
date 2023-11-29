@@ -6,6 +6,14 @@ from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import CTransformers
 import platform
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
+class CustomStreamingCallbackHandler(StreamingStdOutCallbackHandler):
+    def __init__(self, queue):
+        self.queue = queue
+    def on_llm_new_token(self, token, **kwargs):
+        """Run on new LLM token. Only available when streaming is enabled."""
+        self.queue.append(token)
 
 class TextColor:
     RED = '\033[31m'
@@ -39,15 +47,20 @@ embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6
 
 vector_store=FAISS.from_documents(text_chunks, embeddings)
 
+queue = []
 # 3. load pre-trained model
 if platform.architecture()[0] == '64bit' and platform.machine() == 'aarch64':
     llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
                   lib="./libctransformers.so",
+                  stream=True,
+                  callbacks=[CustomStreamingCallbackHandler(queue)],
                   config={'temperature':0.1})
 else:
     llm=CTransformers(model="TheBloke/Llama-2-7B-Chat-GGML",
                   model_type="llama",
+                  stream=True,
+                  callbacks=[CustomStreamingCallbackHandler(queue)],
                   config={'temperature':0.1})
 
 
@@ -74,5 +87,6 @@ chain = RetrievalQA.from_chain_type(llm=llm,
 question="how old is jude and what does he do"
 result=chain({'query':question})
 
-print('result: ', result['result'])
+for token in queue:
+    print(token)
 
