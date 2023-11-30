@@ -1,7 +1,7 @@
 import asyncio
 import websockets
 from callbacks import websocket_callback_singleton
-from llama2_model import llama2_chain
+from models.llama2_model import llama2_chain
 
 PORT = 8081
 

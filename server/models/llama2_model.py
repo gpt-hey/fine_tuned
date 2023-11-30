@@ -10,7 +10,7 @@ from text_color import TextColor
 from qa_template import TEMPLATE
 
 llm = LlamaCpp(
-    model_path="../llama-2-7b.gguf.q4_K_M.bin",
+    model_path="./models/llama-2-7b.gguf.q4_K_M.bin",
     temperature=0.75,
     callback_manager=CallbackManager([websocket_callback_singleton]),
     verbose=True,
