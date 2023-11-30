@@ -8,12 +8,14 @@ from langchain.llms import CTransformers
 import platform
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
+
 class CustomStreamingCallbackHandler(StreamingStdOutCallbackHandler):
     def __init__(self, queue):
         self.queue = queue
     def on_llm_new_token(self, token, **kwargs):
         """Run on new LLM token. Only available when streaming is enabled."""
         self.queue.append(token)
+
 
 class TextColor:
     RED = '\033[31m'
@@ -42,7 +44,7 @@ text_splitter=RecursiveCharacterTextSplitter(
 text_chunks=text_splitter.split_documents(documents)
 print(TextColor.BLUE + "load and prepare sample training data!" + TextColor.RESET)
 
-# 2. convert the text chunks into Embeddings and create a FAISS vector store 
+# 2. convert the text chunks into Embeddings and create a FAISS vector store
 embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2', model_kwargs={'device':'cpu'})
 
 vector_store=FAISS.from_documents(text_chunks, embeddings)
@@ -85,8 +87,7 @@ chain = RetrievalQA.from_chain_type(llm=llm,
 
 
 question="how old is jude and what does he do"
-result=chain({'query':question})
+chain({'query':question})
 
 for token in queue:
     print(token)
-
