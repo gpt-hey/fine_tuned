@@ -4,6 +4,15 @@ $ pip install -r requirements.txt
 $ supervisord -c supervisord.conf
 ```
 
+## prompt examples
+
+// 1. ask server to set up reminder
+"@remindme to take notes! in 5 mins"
+
+// 2. ask server questions using llama2 7B gguf model
+"@gguf tell me about yourself"
+
+
 ## setup
 ```
 // Mac (only), need to update transformer to use 4.30.0

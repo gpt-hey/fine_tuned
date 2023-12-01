@@ -23,8 +23,15 @@ print(TextColor.BLUE + "convert text chunks into embeddings!" + TextColor.RESET)
 # create chain
 qa_prompt=PromptTemplate(template=TEMPLATE, input_variables=['context', 'question'])
 print(TextColor.BLUE + "create q&a template!" + TextColor.RESET)
-llama2_chain = RetrievalQA.from_chain_type(llm=llm,
+
+class Llama2GGUFModel:
+    def is_matched(self, text):
+        return "@gguf" in text.lower()
+    def execute_action(self, text):
+        text = text.replace("@gguf", "")
+        llama2_chain = RetrievalQA.from_chain_type(llm=llm,
                                    chain_type='stuff',
                                    retriever=vector_store.as_retriever(search_kwargs={'k': 2}),
                                    return_source_documents=True,
                                    chain_type_kwargs={'prompt': qa_prompt})
+        llama2_chain({'query': text})

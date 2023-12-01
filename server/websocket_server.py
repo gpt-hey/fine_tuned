@@ -1,7 +1,7 @@
 import asyncio
 import websockets
 from callbacks import websocket_callback_singleton
-from models.llama2_model import llama2_chain
+from models.llama2_gguf_model import Llama2GGUFModel
 from remindme_parser import Remindme
 
 PORT = 8081
@@ -18,8 +18,12 @@ async def message(websocket, path):
                 await websocket.send(f'remindme executed: {resp}')
                 return
 
-            # if none matched before, trigger llm model
-            llama2_chain({'query': message})
+            gguf_model = Llama2GGUFModel()
+            if gguf_model.is_matched(message):
+                gguf_model.execute_action(message)
+                return
+
+            await websocket.send('voided conversation with no match')
 
     except websockets.exceptions.ConnectionClosed:
         print("Connection closed by the client.")
