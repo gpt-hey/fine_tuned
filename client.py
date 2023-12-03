@@ -3,6 +3,7 @@ import websockets
 
 async def send_message():
     uri = "ws://0.0.0.0:8081"  # Replace with the actual WebSocket server URI
+    # uri = "ws://129.213.151.7:8081"
 
     async with websockets.connect(uri, ping_timeout=None) as websocket:
         # Send your actual message
