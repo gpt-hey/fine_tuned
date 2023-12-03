@@ -4,6 +4,15 @@ $ pip install -r requirements.txt
 $ supervisord -c supervisord.conf
 ```
 
+## docker
+```
+$docker build -t gpt_python_server .
+$docker run -p 8081:8081 gpt_python_server
+$docker docker exec -it <container-id> /bin/bash
+```
+
+
+
 ## prompt examples
 
 // 1. ask server to set up reminder

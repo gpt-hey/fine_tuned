@@ -29,10 +29,10 @@ async def message(websocket, path):
         print("Connection closed by the client.")
 
 async def main():
-    # Start the WebSocket server on localhost, port 8081
-    server = await websockets.serve(message, "localhost", PORT)
+    # Start the WebSocket server on 127.0.0.1, port 8081
+    server = await websockets.serve(message, "127.0.0.1", PORT)
 
-    print(f"WebSocket server started on ws://localhost:{PORT}")
+    print(f"WebSocket server started on ws://127.0.0.1:{PORT}")
 
     # Keep the server running until it's manually stopped
     await server.wait_closed()

@@ -2,7 +2,7 @@ import asyncio
 import websockets
 
 async def send_message():
-    uri = "ws://localhost:8081"  # Replace with the actual WebSocket server URI
+    uri = "ws://127.0.0.1:8081"  # Replace with the actual WebSocket server URI
 
     async with websockets.connect(uri) as websocket:
         # message = "@remindme to take notes!"
