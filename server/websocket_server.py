@@ -7,6 +7,20 @@ from remindme_parser import Remindme
 PORT = 8081
 ADDRESS = "0.0.0.0"
 
+async def handle_websocket_close(websocket):
+    try:
+        # Your WebSocket handling logic goes here
+
+        # To close the WebSocket connection, you can use the close method
+        await websocket.close()
+
+    except websockets.exceptions.ConnectionClosedOK:
+        # Handle the case where the connection is already closed
+        pass
+    except Exception as e:
+        # Handle other exceptions as needed
+        print(f"Error: {e}")
+
 async def message(websocket, path):
     print(f"Client connected to path: {path}")
     websocket_callback_singleton.set_websocket(websocket)
@@ -28,6 +42,8 @@ async def message(websocket, path):
 
     except websockets.exceptions.ConnectionClosed:
         print("Connection closed by the client.")
+    finally:
+        await handle_websocket_close(websocket)
 
 async def main():
     async with websockets.serve(message, ADDRESS, PORT):
