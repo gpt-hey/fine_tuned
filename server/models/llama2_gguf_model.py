@@ -11,9 +11,12 @@ from qa_template import TEMPLATE
 
 llm = LlamaCpp(
     model_path="./server/models/llama-2-7b.gguf.q4_K_M.bin",
-    temperature=0.75,
+    temperature=0.7,
+    repeat_penalty=1.176,
+    top_p=0.1,
+    max_tokens=-1,
     callback_manager=CallbackManager([websocket_callback_singleton]),
-    verbose=True,
+    verbose=False,
 )
 text_chunks = load_content()
 embeddings=HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2', model_kwargs={'device':'cpu'})
