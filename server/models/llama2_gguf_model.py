@@ -10,16 +10,16 @@ from qa_template import TEMPLATE
 
 
 class Llama2GGUFModel:
-    def __init__(self, callback):
+    def __init__(self):
         # TODO refactor __init__ and swap out callbackManager to make  init model faster
-        callback_manager = CallbackManager([callback])
+        self.callback_manager = CallbackManager([])
         self.llm = LlamaCpp(
             model_path="./server/models/llama-2-7b.gguf.q4_K_M.bin",
             temperature=0.7,
             repeat_penalty=1.176,
             top_p=0.1,
             max_tokens=-1,
-            callback_manager=callback_manager,
+            callback_manager=self.callback_manager,
             verbose=False,
         )
         text_chunks = load_content()
@@ -30,6 +30,8 @@ class Llama2GGUFModel:
         # create chain
         self.qa_prompt=PromptTemplate(template=TEMPLATE, input_variables=['context', 'question'])
         print(TextColor.BLUE + "create q&a template!" + TextColor.RESET)
+    def update_callback_handler(self, callback_handler):
+        self.callback_manager.set_handler(callback_handler)
     def is_matched(self, text):
         return "@gguf" in text.lower()
     def execute_action(self, text):

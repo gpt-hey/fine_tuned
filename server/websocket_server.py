@@ -18,19 +18,22 @@ async def handle_websocket_close(websocket):
         # Handle other exceptions as needed
         print(f"Error: {e}")
 
+r = Remindme()
+gguf_model = Llama2GGUFModel()
 async def message(websocket, path):
     print(f"Client connected to path: {path}")
-    callback = WebsocketCallbackHandler(websocket)
+
     try:
         async for message in websocket:
             print(f"Received message from client: {message}")
-            r = Remindme()
+
             if r.is_matched(message):
                 resp = await asyncio.to_thread(r.execute_action, message)
                 await websocket.send(f'remindme executed: {resp}')
                 return
 
-            gguf_model = Llama2GGUFModel(callback)
+            callback_handler = WebsocketCallbackHandler(websocket)
+            gguf_model.update_callback_handler(callback_handler)
             if gguf_model.is_matched(message):
                 await asyncio.to_thread(gguf_model.execute_action, message)
                 return
