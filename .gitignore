@@ -4,3 +4,4 @@ venv/**
 **/**.log
 **/**.pid
 **.so
+**.DS_Store
