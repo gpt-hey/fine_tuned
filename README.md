@@ -6,8 +6,10 @@ $ supervisord -c supervisord.conf
 
 ## docker
 ```
-$docker build -t gpt_python_server .
-$docker run -p 8081:8081 gpt_python_server
+$docker build -t gpt_python_server:1.0 .
+$docker run -p 8081:8081 gpt_python_server:1.0
+
+// in case need to debug docker container
 $docker docker exec -it <container-id> /bin/bash
 ```
 
