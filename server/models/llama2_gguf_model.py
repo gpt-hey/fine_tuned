@@ -33,9 +33,9 @@ class Llama2GGUFModel:
     def update_callback_handler(self, callback_handler):
         self.callback_manager.set_handler(callback_handler)
     def is_matched(self, text):
-        return "@gguf" in text.lower()
+        return "@gpt" in text.lower()
     def execute_action(self, text):
-        text = text.replace("@gguf", "")
+        text = text.replace("@gpt", "")
         llama2_chain = RetrievalQA.from_chain_type(llm=self.llm,
                                    chain_type='stuff',
                                    retriever=self.vector_store.as_retriever(search_kwargs={'k': 2}),
